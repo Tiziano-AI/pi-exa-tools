@@ -1,0 +1,50 @@
+{
+  "name": "pi-exa-tools",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Adds Exa-backed web search and page fetching tools to Pi.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "exa",
+    "web-search",
+    "research"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tiziano-AI/pi-exa-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tiziano-AI/pi-exa-tools/issues"
+  },
+  "homepage": "https://github.com/Tiziano-AI/pi-exa-tools#readme",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "extensions/**/*.ts",
+    "skills/**/*.md"
+  ],
+  "scripts": {
+    "test": "node --no-warnings --experimental-strip-types --loader ./tests/pi-peer-loader.mjs --test tests/*.test.ts",
+    "smoke:live": "PI_EXA_LIVE_SMOKE=1 node --no-warnings --experimental-strip-types --loader ./tests/pi-peer-loader.mjs --test tests/live-smoke.test.ts",
+    "check:pack": "node --experimental-strip-types tests/check-pack.ts",
+    "check:pi-load": "node --no-warnings --experimental-strip-types --loader ./tests/pi-peer-loader.mjs tests/check-package-load.ts",
+    "check:source-size": "node --experimental-strip-types tests/check-source-size.ts",
+    "gate": "pnpm test && pnpm run check:pack && pnpm run check:pi-load && pnpm run check:source-size"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/exa-tools/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+# Local auth and environment
+.env
+.env.*
+.npmrc
+
+# Dependencies, package-manager state, caches, and builds
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+dist/
+build/
+.tmp/
+tmp/
+.cache/
+*.tsbuildinfo
+*.tgz
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local Pi/runtime/control-plane notes
+.pi/
+AGENTS.md
+ARCH.md
+PLAN.md
+HANDOFF.md
+CONTINUE.md
+VISION.md
+
+# OS/editor noise
+.DS_Store
+._*
