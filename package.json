@@ -1,6 +1,6 @@
 {
   "name": "pi-exa-tools",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Adds Exa-backed web search and page fetching tools to Pi.",
   "keywords": [
