@@ -13,6 +13,18 @@ import { mapFetchInput, mapSearchInput } from "./mappers.ts";
 import type { ExaConfig } from "./config.ts";
 import type { ExaFetchInput, ExaSearchInput, FetchToolDetails, SearchToolDetails, StoredTruncation } from "./tool-types.ts";
 
+/** Reads a positive integer from the named environment variable, or undefined if absent/invalid. */
+function readPositiveInt(name: string): number | undefined {
+	const raw = process.env[name];
+	if (raw === undefined || raw === "") return undefined;
+	const parsed = Number(raw);
+	if (!Number.isSafeInteger(parsed) || parsed <= 0) return undefined;
+	return parsed;
+}
+
+const MAX_OUTPUT_LINES = readPositiveInt("EXA_MAX_OUTPUT_LINES") ?? DEFAULT_MAX_LINES;
+const MAX_OUTPUT_BYTES = readPositiveInt("EXA_MAX_OUTPUT_BYTES") ?? DEFAULT_MAX_BYTES;
+
 /** Final tool output and details after formatting and truncation. */
 export interface FinalizedExaResult<TDetails extends { truncation?: StoredTruncation; fullOutputPath?: string }> {
 	outputText: string;
@@ -64,7 +76,7 @@ async function finalizeResult<TDetails extends { truncation?: StoredTruncation; 
 	text: string,
 	details: TDetails,
 ): Promise<FinalizedExaResult<TDetails>> {
-	const truncation = truncateHead(text, { maxLines: DEFAULT_MAX_LINES, maxBytes: DEFAULT_MAX_BYTES });
+	const truncation = truncateHead(text, { maxLines: MAX_OUTPUT_LINES, maxBytes: MAX_OUTPUT_BYTES });
 	let outputText = truncation.content;
 	if (truncation.truncated) {
 		const tempDir = await mkdtemp(join(tmpdir(), "pi-exa-"));

@@ -145,6 +145,13 @@ Over-limit arrays are rejected instead of silently clamped. Domains and URLs are
 
 When final output is truncated, the complete output is written to a temporary file and the path is appended to the model-facing result.
 
+Override these truncation limits via environment variables:
+
+- `EXA_MAX_OUTPUT_LINES` — positive integer override for the 2000-line cap
+- `EXA_MAX_OUTPUT_BYTES` — positive integer override for the 50KB byte cap
+
+Set either or both. Invalid or absent values fall back to the defaults above.
+
 ## Config
 
 Scoped operator config lives in JSON:
