@@ -17,6 +17,7 @@ interface RegisteredTool {
 	name: string;
 	description: string;
 	promptSnippet?: string;
+	promptGuidelines?: string[];
 	parameters: object;
 }
 
@@ -44,6 +45,11 @@ for (const extensionPath of piManifest.extensions) {
 	});
 	assert.deepEqual(tools.map((tool) => tool.name).sort(), ["exa_fetch", "exa_search"]);
 	assert.equal(tools.every((tool) => tool.description.length > 0 && tool.promptSnippet && tool.promptSnippet.length > 0), true);
+	for (const tool of tools) {
+		assert.match(tool.description, /Output content preview is truncated/);
+		assert.match(tool.description, /full output is saved to a temp file/);
+		assert.equal(tool.promptGuidelines?.some((guideline) => guideline.includes("read on that path")), true);
+	}
 	assert.equal(commands.has("exa"), true);
 	assert.equal(typeof commands.get("exa")?.handler, "function");
 }

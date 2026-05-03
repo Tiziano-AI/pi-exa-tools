@@ -1,16 +1,12 @@
 /** Pi extension entrypoint for direct Exa-backed search, fetch, and operator workflows. */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import {
-	DEFAULT_MAX_BYTES,
-	DEFAULT_MAX_LINES,
-	formatSize,
-} from "@mariozechner/pi-coding-agent";
 import { Text } from "@mariozechner/pi-tui";
 import { readExaAuthState, getMissingApiKeyMessage } from "./src/config.ts";
 import { runExaCommand } from "./src/commands.ts";
 import { runFetchRequest, runSearchRequest } from "./src/operations.ts";
 import { resolveProjectRoot } from "./src/project.ts";
+import { formatPreviewToolSentence } from "./src/preview-limits.ts";
 import {
 	applyFetchDefaults,
 	applySearchDefaults,
@@ -24,12 +20,13 @@ export default function exaToolsExtension(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "exa_search",
 		label: "Exa Search",
-		description: `Search the live web through Exa. Returns 10 ranked results with concise highlights. Output is truncated to ${DEFAULT_MAX_LINES} lines or ${formatSize(DEFAULT_MAX_BYTES)}, whichever is hit first.`,
+		description: `Search the live web through Exa. Returns 10 ranked results with concise highlights. ${formatPreviewToolSentence()}`,
 		promptSnippet: "Search the live web through Exa for source discovery before deeper fetching.",
 		promptGuidelines: [
 			"Use exa_search when the task depends on changing web facts, official documentation, or external examples outside the workspace.",
 			"Use includeDomains with exa_search when official or trusted sources matter.",
 			"Use exa_fetch on promising URLs instead of asking exa_search for long text.",
+			"When a result says full output was saved to a temp file, use read on that path only if the omitted evidence is needed.",
 		],
 		parameters: ExaSearchSchema,
 		async execute(_toolCallId, params, signal, _onUpdate, ctx) {
@@ -89,11 +86,12 @@ export default function exaToolsExtension(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "exa_fetch",
 		label: "Exa Fetch",
-		description: `Fetch clean page text from one or more explicit URLs through Exa /contents. Always reports per-URL failures. Output is truncated to ${DEFAULT_MAX_LINES} lines or ${formatSize(DEFAULT_MAX_BYTES)}, whichever is hit first.`,
+		description: `Fetch clean page text from one or more explicit URLs through Exa /contents. Always reports per-URL failures. ${formatPreviewToolSentence()}`,
 		promptSnippet: "Fetch clean page text from explicit URLs via Exa after search has identified promising sources.",
 		promptGuidelines: [
 			"Use exa_fetch after exa_search when you need deeper page content from selected URLs.",
 			"Do not fetch every result blindly. Pick the most relevant URLs first.",
+			"When a result says full output was saved to a temp file, use read on that path only if the omitted evidence is needed.",
 		],
 		parameters: ExaFetchSchema,
 		async execute(_toolCallId, params, signal, _onUpdate, ctx) {

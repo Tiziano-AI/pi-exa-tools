@@ -17,6 +17,9 @@ export interface StoredTruncation {
 	totalLines: number;
 	outputBytes: number;
 	totalBytes: number;
+	truncatedBy: "lines" | "bytes";
+	maxLines: number;
+	maxBytes: number;
 }
 
 /** Compact search result item stored for expanded TUI rendering. */

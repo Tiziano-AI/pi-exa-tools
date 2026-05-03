@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Tiziano-AI/pi-exa-tools#readme",
   "files": [
     "README.md",
+    "CHANGELOG.md",
     "LICENSE",
     "extensions/**/*.ts",
     "skills/**/*.md"

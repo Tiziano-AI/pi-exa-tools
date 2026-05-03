@@ -133,17 +133,28 @@ The package intentionally does not expose Exa summaries, deep search, answer gen
 - up to 20 `includeDomains` entries
 - 10 Exa results
 - highlights capped at 4000 characters per result
-- final model-facing output truncated at 2000 lines or 50KB, whichever hits first
+- model-facing content preview never exceeds 2000 lines or 50KB, whichever hits first
 
 `exa_fetch` limits:
 
 - one to seven explicit HTTP(S) URLs
 - Exa text extraction capped at 8000 characters per URL
-- final model-facing output truncated at 2000 lines or 50KB, whichever hits first
+- model-facing content preview never exceeds 2000 lines or 50KB, whichever hits first
 
 Over-limit arrays are rejected instead of silently clamped. Domains and URLs are normalized and deduped. Fetch URLs must use `http` or `https`; fragments are stripped before Exa receives them.
 
-When final output is truncated, the complete output is written to a temporary file and the path is appended to the model-facing result.
+When output is truncated, the complete output is written to a temporary file and a short continuation notice is appended to the model-facing result. Use Pi's `read` tool on that path only when the omitted content is needed.
+
+### Output preview controls
+
+The hard safety cap for preview content stays fixed at 2000 lines or 50KB. Operators may only lower the model-facing content preview size with shell environment variables:
+
+```bash
+export PI_EXA_TOOLS_PREVIEW_LINES=400
+export PI_EXA_TOOLS_PREVIEW_BYTES=20480
+```
+
+Both values are positive integers. Absent or invalid values fall back to the hard cap. Values above the hard cap are capped back to 2000 lines or 50KB. These controls affect only the final Pi presentation content preview; the continuation notice may add a small bounded read hint. They do not change Exa search result count, highlight extraction, fetch URL count, or fetched text extraction caps.
 
 ## Config
 
@@ -152,7 +163,7 @@ Scoped operator config lives in JSON:
 - global: `~/.pi/agent/extensions/pi-exa-tools.json`
 - project: `<project-root>/.pi/extensions/pi-exa-tools.json`
 
-Project config overrides global config. The only persisted behavior flag is `enabled`.
+Project config overrides global config. The only persisted behavior flag is `enabled`. `/exa settings` shows the effective output preview limits, but those environment variables are shell launch settings and are not written by `/exa settings`.
 
 ## Cost visibility
 
@@ -168,6 +179,7 @@ Exa request cost is stored in tool details and rendered in the TUI result row wh
 | `/skill:exa-web-research` | Agent guidance for current web research. |
 | `extensions/exa-tools/` | Pi extension runtime. |
 | `skills/exa-web-research/` | Companion skill and examples. |
+| `CHANGELOG.md` | Release notes and contributor credits. |
 
 ## Development checks
 

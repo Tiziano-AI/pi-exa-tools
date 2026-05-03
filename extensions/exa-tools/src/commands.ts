@@ -5,6 +5,7 @@ import { runAuthEditor, runFetch, runSearch } from "./manual-actions.ts";
 import { parseExaCommandInput, type ExaAction } from "./operator-helpers.ts";
 import { runHealthCheck } from "./operations.ts";
 import { resolveProjectRoot } from "./project.ts";
+import { formatPreviewSettingsHint, formatPreviewSettingsLabel } from "./preview-limits.ts";
 import { renderStatusReport, type HealthStatus } from "./reports.ts";
 import {
 	loadOperatorConfig,
@@ -48,6 +49,7 @@ async function runSettingsDialog(pi: ExtensionAPI, ctx: ExtensionCommandContext,
 		const selected = await ctx.ui.select("Exa settings", [
 			`scope: ${scope}`,
 			`enabled: ${config.enabled ? "yes" : "no"}`,
+			formatPreviewSettingsLabel(),
 			`reset ${scope} config`,
 			"done",
 		]);
@@ -61,6 +63,10 @@ async function runSettingsDialog(pi: ExtensionAPI, ctx: ExtensionCommandContext,
 		if (selected.startsWith("enabled:")) {
 			config = { enabled: !config.enabled };
 			await saveOperatorConfig(scope, projectRoot, config);
+			continue;
+		}
+		if (selected.startsWith("output preview:")) {
+			ctx.ui.notify(formatPreviewSettingsHint(), "info");
 			continue;
 		}
 		if (selected === `reset ${scope} config`) {

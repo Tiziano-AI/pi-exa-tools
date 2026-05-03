@@ -2,14 +2,14 @@ import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
-	DEFAULT_MAX_BYTES,
-	DEFAULT_MAX_LINES,
 	formatSize,
 	truncateHead,
+	withFileMutationQueue,
 } from "@mariozechner/pi-coding-agent";
 import { ExaClient } from "./exa-client.ts";
 import { formatContentsResponse, formatSearchResponse } from "./format.ts";
 import { mapFetchInput, mapSearchInput } from "./mappers.ts";
+import { resolvePreviewLimits, toTruncationOptions } from "./preview-limits.ts";
 import type { ExaConfig } from "./config.ts";
 import type { ExaFetchInput, ExaSearchInput, FetchToolDetails, SearchToolDetails, StoredTruncation } from "./tool-types.ts";
 
@@ -64,22 +64,34 @@ async function finalizeResult<TDetails extends { truncation?: StoredTruncation; 
 	text: string,
 	details: TDetails,
 ): Promise<FinalizedExaResult<TDetails>> {
-	const truncation = truncateHead(text, { maxLines: DEFAULT_MAX_LINES, maxBytes: DEFAULT_MAX_BYTES });
+	const limits = resolvePreviewLimits();
+	const truncation = truncateHead(text, toTruncationOptions(limits));
 	let outputText = truncation.content;
 	if (truncation.truncated) {
 		const tempDir = await mkdtemp(join(tmpdir(), "pi-exa-"));
 		const fullOutputPath = join(tempDir, "output.txt");
-		await writeFile(fullOutputPath, text, "utf8");
+		await withFileMutationQueue(fullOutputPath, async () => {
+			await writeFile(fullOutputPath, text, "utf8");
+		});
 		details.truncation = {
 			outputLines: truncation.outputLines,
 			totalLines: truncation.totalLines,
 			outputBytes: truncation.outputBytes,
 			totalBytes: truncation.totalBytes,
+			truncatedBy: normalizeTruncatedBy(truncation.truncatedBy),
+			maxLines: limits.lines.value,
+			maxBytes: limits.bytes.value,
 		};
 		details.fullOutputPath = fullOutputPath;
+		const preview = outputText.length > 0 ? outputText : "[No complete line fit in the configured Exa output preview.]";
+		outputText = preview;
 		outputText += `\n\n[Output truncated: showing ${truncation.outputLines} of ${truncation.totalLines} lines`;
 		outputText += ` (${formatSize(truncation.outputBytes)} of ${formatSize(truncation.totalBytes)}).`;
-		outputText += ` Full output saved to: ${fullOutputPath}]`;
+		outputText += ` Full output saved to: ${fullOutputPath}. Use the read tool on that path if you need omitted content.]`;
 	}
 	return { outputText, details };
+}
+
+function normalizeTruncatedBy(value: string | null): "lines" | "bytes" {
+	return value === "lines" ? "lines" : "bytes";
 }

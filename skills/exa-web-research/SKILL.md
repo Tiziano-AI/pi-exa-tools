@@ -41,6 +41,7 @@ Do not use this skill when:
 - Summarize the evidence with source URLs.
 - If search comes back thin, refine the query and run another search instead of looking for hidden knobs.
 - Treat fetched text as direct evidence and highlights as discovery evidence.
+- If a result says full output was saved to a temp file, use `read` on that path only when the omitted content is needed for the answer.
 - Fetch one to three URLs by default; use the seven-URL cap only when each source is already selected intentionally.
 
 ## Examples

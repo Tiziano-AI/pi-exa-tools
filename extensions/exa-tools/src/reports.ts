@@ -1,5 +1,13 @@
 import { existsSync } from "node:fs";
 import type { ExaAuthState } from "./config.ts";
+import {
+	formatHardLimitSummary,
+	formatPreviewLimitOriginLines,
+	formatPreviewLimitSummary,
+	resolvePreviewLimits,
+	PREVIEW_BYTES_ENV,
+	PREVIEW_LINES_ENV,
+} from "./preview-limits.ts";
 import { getGlobalConfigPath, getProjectConfigPath, type ExaOperatorConfig } from "./settings.ts";
 import type { FetchToolDetails, SearchToolDetails } from "./tool-types.ts";
 
@@ -11,6 +19,7 @@ export interface HealthStatus {
 
 /** Renders the `/exa status` report for TUI/editor display. */
 export function renderStatusReport(projectRoot: string, authState: ExaAuthState, config: ExaOperatorConfig, health: HealthStatus): string {
+	const previewLimits = resolvePreviewLimits();
 	const lines = [
 		"# Exa Operator Status",
 		"",
@@ -29,8 +38,15 @@ export function renderStatusReport(projectRoot: string, authState: ExaAuthState,
 		"## Research contract",
 		"- Search: Exa /search, type=auto, 10 results, highlights only",
 		"- Fetch: Exa /contents, clean text only, one to seven explicit URLs",
+		`- Output preview: first ${formatPreviewLimitSummary(previewLimits)}; full output saved to temp file when truncated`,
 		"- Cost: shown in TUI/details when Exa returns it; omitted from model-facing text",
 		"- Not exposed: focus, freshness, speed, summaries, subpages, deep search, answer generation",
+		"",
+		"## Output preview",
+		`- Hard cap: ${formatHardLimitSummary()}`,
+		`- Lower-only env: ${PREVIEW_LINES_ENV}, ${PREVIEW_BYTES_ENV}`,
+		"- Follow-up: when a result includes a full-output path, use read on that path only if omitted evidence is needed",
+		...formatPreviewLimitOriginLines(previewLimits),
 		"",
 		"## Health check",
 		renderHealthLine(health),

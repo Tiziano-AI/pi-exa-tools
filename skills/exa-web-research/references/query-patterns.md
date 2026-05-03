@@ -42,6 +42,7 @@ Good pattern:
 1. `exa_search` with a precise natural-language query and source filters when useful.
 2. Pick one to three URLs by default, or up to seven when each source is already intentional.
 3. `exa_fetch` those URLs for clean text.
+4. If Exa output is truncated and gives a full-output path, use `read` on that path only when omitted lines are necessary.
 
 Avoid:
 - fetching every returned URL without triage
