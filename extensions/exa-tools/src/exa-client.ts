@@ -163,28 +163,27 @@ function sleep(ms: number, signal?: AbortSignal): Promise<void> {
 	if (ms <= 0) {
 		return Promise.resolve();
 	}
-	if (signal?.aborted) {
+	if (signal === undefined) {
+		return new Promise((resolve) => {
+			setTimeout(resolve, ms);
+		});
+	}
+	if (signal.aborted) {
 		return Promise.reject(new Error("Retry wait aborted before sleep started."));
 	}
 
 	return new Promise((resolve, reject) => {
+		const abortSignal = signal;
+		const abortListener = () => {
+			clearTimeout(timeout);
+			abortSignal.removeEventListener("abort", abortListener);
+			reject(new Error("Retry wait aborted."));
+		};
 		const timeout = setTimeout(() => {
-			if (abortListener) {
-				signal?.removeEventListener("abort", abortListener);
-			}
+			abortSignal.removeEventListener("abort", abortListener);
 			resolve();
 		}, ms);
 
-		const abortListener = signal
-			? () => {
-				clearTimeout(timeout);
-				signal.removeEventListener("abort", abortListener);
-				reject(new Error("Retry wait aborted."));
-			}
-			: undefined;
-
-		if (abortListener) {
-			signal.addEventListener("abort", abortListener, { once: true });
-		}
+		abortSignal.addEventListener("abort", abortListener, { once: true });
 	});
 }

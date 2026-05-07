@@ -191,7 +191,7 @@ npm pack --dry-run --json
 git diff --check
 ```
 
-`pnpm run gate` runs deterministic unit tests, package-load checks, npm package-content checks, and source-size checks. It does not run live Exa calls by default.
+`pnpm run gate` runs package-local TypeScript source typechecking, deterministic unit tests, package-load checks, npm package-content checks, and source-size checks. It does not run live Exa calls by default.
 
 Optional live smoke, when Exa credentials are available and network/API cost is acceptable:
 
