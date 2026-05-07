@@ -1,4 +1,4 @@
-import type { ExtensionAPI, ExtensionCommandContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { getAuthFileTemplate, getMissingApiKeyMessage, readExaAuthState, removeAuthFile, writeAuthFile } from "./config.ts";
 import { formatErrorMessage, parseListInput, requireUi, showText, runWithStatus } from "./command-ui.ts";
 import { runFetchRequest, runSearchRequest } from "./operations.ts";

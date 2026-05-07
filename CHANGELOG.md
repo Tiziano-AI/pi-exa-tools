@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2026-05-07
+
+- Aligned Pi runtime imports, peer dependencies, and package-load tests to the `@earendil-works` Pi 0.74 package scope.
+
 ## 0.3.0 - 2026-05-03
 
 - Added lower-only Exa output preview controls with `PI_EXA_TOOLS_PREVIEW_LINES` and `PI_EXA_TOOLS_PREVIEW_BYTES`.

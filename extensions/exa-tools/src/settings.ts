@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { getAgentDir, withFileMutationQueue } from "@mariozechner/pi-coding-agent";
+import { getAgentDir, withFileMutationQueue } from "@earendil-works/pi-coding-agent";
 import type { ExaFetchInput, ExaSearchInput } from "./tool-types.ts";
 
 /** Scope for persisted Exa operator configuration. */

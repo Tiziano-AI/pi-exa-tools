@@ -5,7 +5,7 @@ import {
 	formatSize,
 	truncateHead,
 	withFileMutationQueue,
-} from "@mariozechner/pi-coding-agent";
+} from "@earendil-works/pi-coding-agent";
 import { ExaClient } from "./exa-client.ts";
 import { formatContentsResponse, formatSearchResponse } from "./format.ts";
 import { mapFetchInput, mapSearchInput } from "./mappers.ts";

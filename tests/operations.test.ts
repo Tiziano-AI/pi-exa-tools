@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { DEFAULT_MAX_BYTES } from "@mariozechner/pi-coding-agent";
+import { DEFAULT_MAX_BYTES } from "@earendil-works/pi-coding-agent";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { readFile } from "node:fs/promises";

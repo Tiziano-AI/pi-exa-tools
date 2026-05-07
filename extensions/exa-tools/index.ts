@@ -1,7 +1,7 @@
 /** Pi extension entrypoint for direct Exa-backed search, fetch, and operator workflows. */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Text } from "@mariozechner/pi-tui";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Text } from "@earendil-works/pi-tui";
 import { readExaAuthState, getMissingApiKeyMessage } from "./src/config.ts";
 import { runExaCommand } from "./src/commands.ts";
 import { runFetchRequest, runSearchRequest } from "./src/operations.ts";

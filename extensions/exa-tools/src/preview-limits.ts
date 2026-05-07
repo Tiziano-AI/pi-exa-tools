@@ -2,7 +2,7 @@ import {
 	DEFAULT_MAX_BYTES,
 	DEFAULT_MAX_LINES,
 	formatSize,
-} from "@mariozechner/pi-coding-agent";
+} from "@earendil-works/pi-coding-agent";
 
 /** Environment variable that may lower the final model-facing preview line cap. */
 export const PREVIEW_LINES_ENV = "PI_EXA_TOOLS_PREVIEW_LINES";

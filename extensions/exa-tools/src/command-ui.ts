@@ -1,4 +1,4 @@
-import type { ExtensionCommandContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 
 /** Ensure the Exa operator flow is running with an interactive UI surface. */
 export async function requireUi(ctx: ExtensionCommandContext, action: string): Promise<boolean> {

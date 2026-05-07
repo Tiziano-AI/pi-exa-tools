@@ -1,6 +1,6 @@
 {
   "name": "pi-exa-tools",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "Adds Exa-backed web search and page fetching tools to Pi.",
   "keywords": [
@@ -36,8 +36,8 @@
     "gate": "pnpm test && pnpm run check:pack && pnpm run check:pi-load && pnpm run check:source-size"
   },
   "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*",
-    "@mariozechner/pi-tui": "*",
+    "@earendil-works/pi-coding-agent": ">=0.74.0",
+    "@earendil-works/pi-tui": ">=0.74.0",
     "typebox": "*"
   },
   "pi": {
