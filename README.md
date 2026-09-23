@@ -7,7 +7,7 @@ After installation, Pi has:
 - `exa_search`, a tool for compact web discovery through Exa `/search`.
 - `exa_fetch`, a tool for clean text extraction from selected URLs through Exa `/contents`.
 - `/exa`, the operator command for status, health checks, auth, settings, reset, and manual search/fetch.
-- `/skill:exa-web-research`, the model-facing guide for the simple discovery-then-fetch workflow.
+- `/skill:exa-web-research`, the model-facing guide for discovery-first web research and fetch-narrow evidence gathering.
 
 The package uses direct HTTP to Exa. It does not use MCP and does not patch Pi.
 
@@ -116,12 +116,14 @@ Schema:
 
 ## Research workflow
 
-Use the package as a simple discovery-then-fetch loop:
+Use the package as a discovery-first, fetch-narrow loop:
 
-1. Use `exa_search` to discover promising pages.
-2. Use `includeDomains` when official or trusted sources matter.
-3. Pick one to a few URLs from the returned highlights.
-4. Use `exa_fetch` to read selected pages as clean text.
+1. For unknown or fast-moving topics, start with a broad, neutral `exa_search` that maps current terminology, candidate authorities, standards, and primary sources. Do not preselect providers, vendors, domains, or dated terminology unless the user/task names them or the source of truth is already known.
+2. For known official docs, release notes, or post-discovery source narrowing, use `includeDomains` to focus on official or trusted domains.
+3. When recency matters, include the time horizon in the query and compare visible source dates, versions, or changelogs before treating evidence as current.
+4. Pick one to a few URLs from the returned highlights.
+5. Use `exa_fetch` to read selected pages as clean text.
+6. Label stale, superseded, or uncertain evidence instead of smoothing it into a current claim.
 
 The package intentionally does not expose Exa summaries, deep search, answer generation, subpage crawling, freshness controls, category controls, or prompt-like synthesis controls.
 

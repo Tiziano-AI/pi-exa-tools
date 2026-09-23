@@ -24,7 +24,9 @@ export default function exaToolsExtension(pi: ExtensionAPI) {
 		promptSnippet: "Search the live web through Exa for source discovery before deeper fetching.",
 		promptGuidelines: [
 			"Use exa_search when the task depends on changing web facts, official documentation, or external examples outside the workspace.",
-			"Use includeDomains with exa_search when official or trusted sources matter.",
+			"For unknown or fast-moving topics, search broadly and neutrally first; do not preselect providers, vendors, domains, or dated terminology unless the task names them or the source of truth is known.",
+			"Use includeDomains with exa_search when an official or trusted source is already known, or after discovery identifies candidate authority domains.",
+			"For current claims, include the time horizon and compare source dates or versions before treating evidence as current.",
 			"Use exa_fetch on promising URLs instead of asking exa_search for long text.",
 			"When a result says full output was saved to a temp file, use read on that path only if the omitted evidence is needed.",
 		],
@@ -90,7 +92,8 @@ export default function exaToolsExtension(pi: ExtensionAPI) {
 		promptSnippet: "Fetch clean page text from explicit URLs via Exa after search has identified promising sources.",
 		promptGuidelines: [
 			"Use exa_fetch after exa_search when you need deeper page content from selected URLs.",
-			"Do not fetch every result blindly. Pick the most relevant URLs first.",
+			"Do not fetch every result blindly. Pick the most relevant, primary, or official URLs first.",
+			"Report visible dates, versions, source type, and provenance when fetched evidence supports a current claim.",
 			"When a result says full output was saved to a temp file, use read on that path only if the omitted evidence is needed.",
 		],
 		parameters: ExaFetchSchema,
