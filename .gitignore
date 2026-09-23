@@ -21,9 +21,9 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Local Pi/runtime/control-plane notes
+# Local Pi/runtime state and maintainer notes (AGENTS.md is tracked)
 .pi/
-AGENTS.md
+MAINTAINER.md
 ARCH.md
 PLAN.md
 HANDOFF.md

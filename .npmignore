@@ -6,6 +6,7 @@
 .gitignore
 .npmignore
 AGENTS.md
+MAINTAINER.md
 ARCH.md
 PLAN.md
 HANDOFF.md

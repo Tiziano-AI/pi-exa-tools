@@ -214,46 +214,35 @@ skill:exa-web-research
 
 ## Release choreography
 
-Publication, source push, tag push, and GitHub Release creation are human-owned stop points. Do not run them without explicit approval.
+Releases are maintainer-owned. Pushing source and tag, npm publication, and GitHub Release creation each publish to a public destination, so none of them runs without the maintainer's explicit approval for that release.
 
-Recommended release flow:
+The order keeps the published tarball traceable to pushed source:
 
-```bash
-pnpm run gate
-npm pack --dry-run --json
-git diff --check
-git status -sb
-git add -A
-git commit -m "Prepare pi-exa-tools release"
-```
+1. Prepare the release: set the version in `package.json`, add a `## X.Y.Z - YYYY-MM-DD` section to `CHANGELOG.md`, and align README, skill copy, tests, and package metadata with what ships.
+2. Run the release-candidate checks:
 
-If `package.json` still needs a version bump, run `npm version <major|minor|patch|x.y.z>` after the change commit so npm creates the version commit and tag. If the intended version is already present, create the matching tag after the commit instead:
+   ```bash
+   pnpm run gate
+   npm pack --dry-run --json
+   git diff --check
+   git status -sb
+   ```
 
-```bash
-git tag "v$(node -p 'require("./package.json").version')"
-```
+3. Stage the intended release files by name (never `git add -A` or `git add .`, which would sweep in unrelated work and local state), commit, tag, push, and confirm the remote has both:
 
-Re-run the release-candidate proof after the version commit/tag:
+   ```bash
+   git add <intended release files>
+   git commit -m "Release pi-exa-tools x.y.z"
+   git tag "v$(node -p 'require("./package.json").version')"
+   git push origin main
+   git push origin "v$(node -p 'require("./package.json").version')"
+   git ls-remote origin refs/heads/main "refs/tags/v$(node -p 'require("./package.json").version')"
+   ```
 
-```bash
-pnpm run gate
-npm pack --dry-run --json
-git diff --check
-git status -sb
-git tag --points-at HEAD
-```
+4. Publish from that exact clean checkout with `npm publish`, then verify the registry artifact:
 
-Then stop for approval before publication:
+   ```bash
+   npm view pi-exa-tools@$(node -p 'require("./package.json").version') version dist.integrity dist.tarball --json
+   ```
 
-```bash
-npm publish
-```
-
-After npm publication is confirmed, verify the registry artifact, then push source and tag:
-
-```bash
-npm view pi-exa-tools@$(node -p 'require("./package.json").version') version dist.integrity dist.tarball --json
-git push origin main --follow-tags
-```
-
-Create the GitHub Release only after npm publication and source/tag push are confirmed.
+5. Create the GitHub Release for the tag, with the matching `CHANGELOG.md` section as its notes, only after npm publication and the pushed source and tag are confirmed.

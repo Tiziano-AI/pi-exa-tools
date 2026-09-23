@@ -34,6 +34,7 @@ for (const forbidden of [
 	".npmignore",
 	".npmrc",
 	"AGENTS.md",
+	"MAINTAINER.md",
 	"ARCH.md",
 	"PLAN.md",
 	"HANDOFF.md",
